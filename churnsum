@@ -1,0 +1,35 @@
+#!/usr/bin/swift
+
+import Foundation
+
+let s = try String(contentsOfFile:Process.arguments[1], encoding: NSUTF8StringEncoding)
+let lines = s.componentsSeparatedByCharactersInSet(NSCharacterSet.newlineCharacterSet())
+
+var keys = lines[0].componentsSeparatedByString(",")
+keys.append("upd_plus_del")
+print(",".join(keys))
+
+for line in lines[1..<lines.count] {
+    
+    var added: Int = 0
+    var deleted: Int = 0
+    
+    var components = line.componentsSeparatedByString(",")
+    
+    guard components.count > 1 else {
+        continue
+    }
+    
+    for componentIndex in 0..<components.count {
+        switch keys[componentIndex] {
+        case "added":
+            added = Int(components[componentIndex])!
+        case "deleted":
+            deleted = Int(components[componentIndex])!
+        default: break;
+        }
+    }
+    components.append(String(added + deleted))
+    print(",".join(components))
+}
+
